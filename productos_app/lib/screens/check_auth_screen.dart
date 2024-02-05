@@ -18,12 +18,9 @@ class CheckAuthScreen extends StatelessWidget {
           future: authService.readToken(),
           builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
 
-
-            print("snapshot.hasData = ${!snapshot.hasData}");
             if ( !snapshot.hasData )
               return Text('Verificando credenciales...');
 
-            print("snapshot.data = ${snapshot.data}");
             if ( snapshot.data == '' ) {
               Future.microtask(() {
 
