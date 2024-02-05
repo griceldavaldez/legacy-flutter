@@ -35,7 +35,7 @@ class _ProductScreenBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
+
     final productForm = Provider.of<ProductFormProvider>(context);
 
     return Scaffold(
@@ -48,38 +48,38 @@ class _ProductScreenBody extends StatelessWidget {
               children: [
                 ProductImage( url: productService.selectedProduct.picture ),
                 Positioned(
-                  top: 60,
-                  left: 20,
-                  child: IconButton(
-                    onPressed: () => Navigator.of(context).pop(), 
-                    icon: Icon( Icons.arrow_back_ios_new, size: 40, color: Colors.white ),
-                  )
+                    top: 60,
+                    left: 20,
+                    child: IconButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      icon: Icon( Icons.arrow_back_ios_new, size: 40, color: Colors.white ),
+                    )
                 ),
 
                 Positioned(
-                  top: 60,
-                  right: 20,
-                  child: IconButton(
-                    onPressed: () async {
-                      
-                      final picker = new ImagePicker();
-                      final PickedFile? pickedFile = await picker.getImage(
-                        // source: ImageSource.gallery,
-                        source: ImageSource.camera,
-                        imageQuality: 100
-                      );
+                    top: 60,
+                    right: 20,
+                    child: IconButton(
+                      onPressed: () async {
 
-                      if( pickedFile == null ) {
-                        print('No seleccionó nada');
-                        return;
-                      }
+                        final picker = new ImagePicker();
+                        final XFile? pickedFile = await picker.pickImage(
+                          // source: ImageSource.gallery,
+                            source: ImageSource.camera,
+                            imageQuality: 100
+                        );
 
-                      productService.updateSelectedProductImage(pickedFile.path);
-                      
+                        if( pickedFile == null ) {
+                          print('No seleccionó nada');
+                          return;
+                        }
 
-                    }, 
-                    icon: Icon( Icons.camera_alt_outlined, size: 40, color: Colors.white ),
-                  )
+                        productService.updateSelectedProductImage(pickedFile.path);
+
+
+                      },
+                      icon: Icon( Icons.camera_alt_outlined, size: 40, color: Colors.white ),
+                    )
                 )
               ],
             ),
@@ -94,13 +94,13 @@ class _ProductScreenBody extends StatelessWidget {
 
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       floatingActionButton: FloatingActionButton(
-        child: productService.isSaving 
-          ? CircularProgressIndicator( color: Colors.white )
-          : Icon( Icons.save_outlined ),
-        onPressed: productService.isSaving 
-          ? null
-          : () async {
-          
+        child: productService.isSaving
+            ? CircularProgressIndicator( color: Colors.white )
+            : Icon( Icons.save_outlined ),
+        onPressed: productService.isSaving
+            ? null
+            : () async {
+
           if ( !productForm.isValidForm() ) return;
 
           final String? imageUrl = await productService.uploadImage();
@@ -109,9 +109,11 @@ class _ProductScreenBody extends StatelessWidget {
 
           await productService.saveOrCreateProduct(productForm.product);
 
+          NotificationsService.showSnackbar("Se ha guardado el producto correctamente.");
+
         },
       ),
-   );
+    );
   }
 }
 
@@ -143,11 +145,11 @@ class _ProductForm extends StatelessWidget {
                 onChanged: ( value ) => product.name = value,
                 validator: ( value ) {
                   if ( value == null || value.length < 1 )
-                    return 'El nombre es obligatorio'; 
+                    return 'El nombre es obligatorio';
                 },
                 decoration: InputDecorations.authInputDecoration(
-                  hintText: 'Nombre del producto', 
-                  labelText: 'Nombre:'
+                    hintText: 'Nombre del producto',
+                    labelText: 'Nombre:'
                 ),
               ),
 
@@ -167,17 +169,17 @@ class _ProductForm extends StatelessWidget {
                 },
                 keyboardType: TextInputType.number,
                 decoration: InputDecorations.authInputDecoration(
-                  hintText: '\$150', 
-                  labelText: 'Precio:'
+                    hintText: '\$150',
+                    labelText: 'Precio:'
                 ),
               ),
-              
+
               SizedBox( height: 30 ),
               SwitchListTile.adaptive(
-                value: product.available, 
-                title: Text('Disponible'),
-                activeColor: Colors.indigo,
-                onChanged: productForm.updateAvailability
+                  value: product.available,
+                  title: Text('Disponible'),
+                  activeColor: Colors.indigo,
+                  onChanged: productForm.updateAvailability
               ),
 
 
@@ -191,14 +193,14 @@ class _ProductForm extends StatelessWidget {
   }
 
   BoxDecoration _buildBoxDecoration() => BoxDecoration(
-    color: Colors.white,
-    borderRadius: BorderRadius.only( bottomRight: Radius.circular(25), bottomLeft: Radius.circular(25)),
-    boxShadow: [
-      BoxShadow(
-        color: Colors.black.withOpacity(0.05),
-        offset: Offset(0,5),
-        blurRadius: 5
-      )
-    ]
+      color: Colors.white,
+      borderRadius: BorderRadius.only( bottomRight: Radius.circular(25), bottomLeft: Radius.circular(25)),
+      boxShadow: [
+        BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            offset: Offset(0,5),
+            blurRadius: 5
+        )
+      ]
   );
 }
